@@ -1,0 +1,25 @@
+Package: UEMTS
+Title: Univariate Error Measures for Time Series forecasting
+Version: 0.1.0.0
+Authors@R: 
+    person(given = "Jacopo",
+           family = "De Stefani",
+           role = c("aut", "cre"),
+           email = "jacopo.de.stefani@gmail.com",
+           comment = c(ORCID = "0000-0003-0257-4537"))
+Description: Implementation of the univariate error measures for time series forecasting described in the paper 
+    Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+    stats,
+    utils,
+    lattice,
+    forecast
+Requires:
+    forecast
+Suggests: 
+    testthat

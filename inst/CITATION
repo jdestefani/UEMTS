@@ -1,0 +1,16 @@
+citHeader("To cite UEMTS in publications use:")
+
+citEntry(
+  entry    = "misc",
+  title    = "Univariate Error Measures for Time Series forecasting",
+  author   = person(given = "Jacopo",
+           family = "De Stefani",
+           comment = c(ORCID = "0000-0003-0257-4537")),
+  journal  = "GitHub",
+  year     = "2021",
+  url      = "https://github.com/jdestefani/UEMTS",
+  textVersion = paste("Jacopo De Stefani (ORCID: 0000-0003-0257-4537) (2021).",
+                      "Univariate Error Measures for Time Series Forecasting.",
+                      "URL https://github.com/jdestefani/UEMTS"
+  )
+)
