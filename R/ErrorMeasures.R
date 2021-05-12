@@ -8,10 +8,28 @@
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
-#' @return MAPE value
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{MAPE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one MAPE for each time step}
+#'         }
+#' 
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- MAPE(y_test,y_hat_naive)
 MAPE <- function(y,y_hat,result_type=c("measure","raw")){
-  check_equal_length_pair(y,y_hat)
+  input_check_y_yhat(y,y_hat)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
+  }
   result_type <- match.arg(result_type)
   return(switch(result_type,
                 measure = (1/length(y))*sum(abs(100*(y-y_hat)/y)),
@@ -23,30 +41,56 @@ MAPE <- function(y,y_hat,result_type=c("measure","raw")){
 }
 
 #' MdAPE - Median Absolute Percentage Error
-#' \textbf{MdAPE} : $Md_{t \in \{1 \cdots n\}}(\mid 100 \cdot \frac{y_t - \hat{y}_t}{y_t}\mid)$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' 
+#' MdAPE = \eqn{median( 100  (y_t - y_hat_t)/(y_t))}
+#'
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.  
+#' 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return MdAPE value
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- MdAPE(y_test,y_hat_naive)
 MdAPE <- function(y,y_hat){
-  check_equal_length_pair(y,y_hat)
+  input_check_y_yhat(y,y_hat)
   return(median(100*(y-y_hat)/y))
 }
 
 #' RMSPE - Root Mean Squared Percentage Error
-#' \textbf{RMSPE} : $\sqrt{\frac{1}{n} \sum_{t=0}^n (100 \cdot \frac{y_t - \hat{y}_t}{y_t})^2}$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' 
+#' RMSPE = \eqn{\sqrt{1/n \sum_{t=0}^n (100  ((y_t - y_hat_t)/(y_t))^2}}
+#' 
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
-#' @return RMSPE value
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{RMSPE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one RMSPE for each time step}
+#'         }
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- RMSPE(y_test,y_hat_naive)
 RMSPE <- function(y,y_hat,result_type=c("measure","raw")){
-  check_equal_length_pair(y,y_hat)
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat(y,y_hat)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   result_type <- match.arg(result_type)
   return(switch(result_type,
@@ -59,30 +103,55 @@ RMSPE <- function(y,y_hat,result_type=c("measure","raw")){
 }
 
 #' RMdSPE - Root Median Squared Percentage Error
-#' \textbf{RMdSPE} : $\sqrt{ Md_{t \in \{1 \cdots n\}}((100 \cdot \frac{y_t - \hat{y}_t}{y_t})^2)}$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' 
+#' RMdSPE = \eqn{\sqrt{ median(100  ((y_t - y_hat_t)/(y_t))^2)}}
+#' 
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return RMdSPE value
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- RMdSPE(y_test,y_hat_naive)
 RMdSPE <- function(y,y_hat){
-  check_equal_length_pair(y,y_hat)
+  input_check_y_yhat(y,y_hat)
   return(sqrt(median(100*(((y-y_hat)/y)^2))))
 }
 
 #' sMAPE - Scaled Mean Absolute Percentage Error
-#' \textbf{sMAPE} : $\frac{100}{n} \sum_{t=0}^n \cdot \frac{\mid y_t - \hat{y}_t\mid}{\frac{y_t+\hat{y}_t}{2}}$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' 
+#' sMAPE = \eqn{100/n \sum_{t=0}^n   (y_t - y_hat_t)/((y_t+y_hat_t)/(2))}
+#' 
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
-#' @return sMAPE value
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{sMAPE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one sMAPE for each time step}
+#'         }
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- sMAPE(y_test,y_hat_naive)
 sMAPE <- function(y,y_hat,result_type=c("measure","raw")){
-  check_equal_length_pair(y,y_hat)
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat(y,y_hat)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   result_type <- match.arg(result_type)
   return(switch(result_type,
@@ -95,15 +164,24 @@ sMAPE <- function(y,y_hat,result_type=c("measure","raw")){
 
 
 #' sMdAPE - Scaled Median Absolute Percentage Error
-#' \textbf{sMdAPE} : $Md_{t \in \{1 \cdots n\}}(200 \cdot \frac{\mid y_t - \hat{y}_t\mid}{y_t+\hat{y}_t})$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' 
+#' sMdAPE = \eqn{median(200 (y_t - y_hat_t)/(y_t+y_hat_t))}
+#' 
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return sMdAPE value
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- sMdAPE(y_test,y_hat_naive)
 sMdAPE <- function(y,y_hat){
-  check_equal_length_pair(y,y_hat)
+  input_check_y_yhat(y,y_hat)
   return(median(200*((abs(y-y_hat)/(y+y_hat)))))
 }
 
@@ -111,16 +189,31 @@ sMdAPE <- function(y,y_hat){
 
 #' MSE - Mean Squared Error
 #' \textbf{MSE} : $ \frac{1}{n} \sum_{t=0}^n (y_t - \hat{y}_t)^2$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.  
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
-#' @return MSE value
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{MSE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one MSE for each time step}
+#'         }
+#'         
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- MSE(y_test,y_hat_naive)
 MSE <- function(y,y_hat,result_type=c("measure","raw")){
-  check_equal_length_pair(y,y_hat)
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat(y,y_hat)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   result_type <- match.arg(result_type)
   return(switch(result_type,
@@ -133,12 +226,19 @@ MSE <- function(y,y_hat,result_type=c("measure","raw")){
 
 #' RMSE - Root Mean Squared Error
 #' \textbf{RMSE} : $\sqrt{ \frac{1}{n} \sum_{t=0}^n (y_t - \hat{y}_t)^2}$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return MSE value
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- RMSE(y_test,y_hat_naive)
 RMSE <- function(y,y_hat,result_type=c("measure","raw")){
   result_type <- match.arg(result_type)
   return(sqrt(MSE(y,y_hat,result_type)))
@@ -146,16 +246,26 @@ RMSE <- function(y,y_hat,result_type=c("measure","raw")){
 
 #' MAE - Mean Absolute Error
 #' \textbf{MAE} : $\frac{1}{n} \sum_{t=0}^n |y_t - \hat{y}_t|$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688. 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return MAE value
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- MAE(y_test,y_hat_naive)
 MAE <- function(y,y_hat,result_type=c("measure","raw")){
-  check_equal_length_pair(y,y_hat)
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat(y,y_hat)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   result_type <- match.arg(result_type)
   return(switch(result_type,
@@ -167,15 +277,22 @@ MAE <- function(y,y_hat,result_type=c("measure","raw")){
 }
 
 #' MdAE - Median Absolute Error
-#' \textbf{MdAE} : $Md_{t \in \{1 \cdots n\}}(|y_t - \hat{y}_t|)$
-#' Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
+#' \textbf{MdAE} : median(|y_t - \hat{y}_t|)$
+#' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.  
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return MdAE value
 #' @examples
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' result <- MdAE(y_test,y_hat_naive)
 MdAE <- function(y,y_hat){
-  check_equal_length_pair(y,y_hat)
+  input_check_y_yhat(y,y_hat)
   return(median(abs(y-y_hat)))
 }
 
@@ -189,9 +306,18 @@ MdAE <- function(y,y_hat){
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
 #'
 #' @return RE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' y_hat_average <-  rep(mean(y_train),h)
+#' results <- RE(y_test,y_hat_average,y_hat_naive)
 RE <- function(y,y_hat,y_hat_bench){
-  check_equal_length_trio(y,y_hat,y_hat_bench)
+  input_check_y_yhat_ybench(y,y_hat,y_hat_bench)
   return((y-y_hat) / (y-y_hat_bench))
 }
 
@@ -202,10 +328,23 @@ RE <- function(y,y_hat,y_hat_bench){
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
 #'
 #' @return MRAE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' y_hat_average <-  rep(mean(y_train),h)
+#' results <- MRAE(y_test,y_hat_average,y_hat_naive)
 MRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat_ybench(y,y_hat,y_hat_bench)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   result_type <- match.arg(result_type)
   return(switch(result_type,
@@ -218,14 +357,24 @@ MRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
 
 
 #' MdRAE - Median Relative Absolute Error
-#' \textbf{MdRAE} : $Md_{t \in \{1 \cdots n\}}(\mid r_t \mid)$
+#' \textbf{MdRAE} : median(\mid r_t \mid)$
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
 #'
 #' @return MdRAE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' y_hat_average <-  rep(mean(y_train),h)
+#' results <- MdRAE(y_test,y_hat_average,y_hat_naive)
 MdRAE <- function(y,y_hat,y_hat_bench){
+  input_check_y_yhat_ybench(y,y_hat,y_hat_bench)
   return(median(abs(RE(y,y_hat,y_hat_bench))))
 }
 
@@ -237,10 +386,23 @@ MdRAE <- function(y,y_hat,y_hat_bench){
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
 #'
 #' @return RE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' y_hat_average <-  rep(mean(y_train),h)
+#' results <- GMRAE(y_test,y_hat_average,y_hat_naive)
 GMRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat_ybench(y,y_hat,y_hat_bench)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   result_type <- match.arg(result_type)
   return(switch(result_type,
@@ -259,15 +421,28 @@ GMRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
 #' @param y_hat - Forecasted values of the time series
 #'
 #' @return MASE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' results <- MASE(y_test,y_hat_naive)
 MASE <- function(y,y_hat,result_type=c("measure","raw")){
-  check_equal_length_pair(y,y_hat)
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat(y,y_hat)
+  if(missing(result_type)){
+    results_type <- "measure"
   }
+  else{
+    input_check_results_type(result_type)
+  }
+  
   if( length(y) == 1 || length(y_hat) == 1 ){
     stop("NMSE undefined for horizon 1")
   }
+  
   result_type <- match.arg(result_type)
   return(switch(result_type,
          measure = ((length(y)-1)/length(y))*(1/sum(abs(diff(y))))*sum(abs(y-y_hat)),
@@ -285,11 +460,23 @@ MASE <- function(y,y_hat,result_type=c("measure","raw")){
 #' @param normalizing_variance - Variance of the training set
 #'
 #' @return NMSE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' results <- NMSE(y_test,y_hat_naive)
 NMSE <- function(y,y_hat,normalizing_variance=NULL,result_type=c("measure","raw")){
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  if(missing(result_type)){
+    results_type <- "measure"
   }
+  else{
+    input_check_results_type(result_type)
+  }
+  
   if( length(y) == 1 || length(y_hat) == 1 ){
     stop("NMSE undefined for horizon 1")
   }
@@ -309,10 +496,23 @@ NMSE <- function(y,y_hat,normalizing_variance=NULL,result_type=c("measure","raw"
 #' @param y_hat_naive - Forecasted values of the time series with the naive method
 #'
 #' @return NNMSE value
-#' @examples
+#' @examples 
+#' y <- AirPassengers
+#' splitting_point <- round(2*length(y)/3)
+#' y_train <- y[1:splitting_point]
+#' h <- 5
+
+#' y_test <- y[(splitting_point+1):(splitting_point+h)]
+#' y_hat_naive <- rep(tail(y_train,1),h)
+#' y_hat_average <-  rep(mean(y_train),h)
+#' results <- NNMSE(y_test,y_hat_average,y_hat_naive)
 NNMSE <- function(y,y_hat,y_hat_naive,result_type=c("measure","raw")){
-  if(!missing(result_type) & length(result_type)>1){
-    stop("Only one 'result_type' allowed.")
+  input_check_y_yhat_ybench(y,y_hat,y_hat_naive)
+  if(missing(result_type)){
+    results_type <- "measure"
+  }
+  else{
+    input_check_results_type(result_type)
   }
   
   result_type <- match.arg(result_type)

@@ -1,3 +1,5 @@
+context("Error measures - Functional tests")
+
 y <- AirPassengers
 splitting_point <- round(2*length(y)/3)
 y_train <- y[1:splitting_point]
