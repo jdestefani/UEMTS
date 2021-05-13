@@ -7,6 +7,9 @@
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688. 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
+#' 
+#' @export
 #'
 #' @return According to the value of \code{result_type}:
 #'         \itemize{
@@ -49,6 +52,8 @@ MAPE <- function(y,y_hat,result_type=c("measure","raw")){
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
+#' @export
+#'
 #' @return MdAPE value
 #' @examples
 #' y <- AirPassengers
@@ -60,7 +65,7 @@ MAPE <- function(y,y_hat,result_type=c("measure","raw")){
 #' result <- MdAPE(y_test,y_hat_naive)
 MdAPE <- function(y,y_hat){
   input_check_y_yhat(y,y_hat)
-  return(median(100*(y-y_hat)/y))
+  return(stats::median(100*(y-y_hat)/y))
 }
 
 #' RMSPE - Root Mean Squared Percentage Error
@@ -70,6 +75,9 @@ MdAPE <- function(y,y_hat){
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
+#' 
+#' @export
 #'
 #' @return According to the value of \code{result_type}:
 #'         \itemize{
@@ -110,6 +118,8 @@ RMSPE <- function(y,y_hat,result_type=c("measure","raw")){
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
+#' @export
+#'
 #' @return RMdSPE value
 #' @examples
 #' y <- AirPassengers
@@ -121,7 +131,7 @@ RMSPE <- function(y,y_hat,result_type=c("measure","raw")){
 #' result <- RMdSPE(y_test,y_hat_naive)
 RMdSPE <- function(y,y_hat){
   input_check_y_yhat(y,y_hat)
-  return(sqrt(median(100*(((y-y_hat)/y)^2))))
+  return(sqrt(stats::median(100*(((y-y_hat)/y)^2))))
 }
 
 #' sMAPE - Scaled Mean Absolute Percentage Error
@@ -131,6 +141,9 @@ RMdSPE <- function(y,y_hat){
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
+#'
+#' @export
 #'
 #' @return According to the value of \code{result_type}:
 #'         \itemize{
@@ -171,6 +184,8 @@ sMAPE <- function(y,y_hat,result_type=c("measure","raw")){
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #'
+#' @export
+#'
 #' @return sMdAPE value
 #' @examples
 #' y <- AirPassengers
@@ -182,16 +197,21 @@ sMAPE <- function(y,y_hat,result_type=c("measure","raw")){
 #' result <- sMdAPE(y_test,y_hat_naive)
 sMdAPE <- function(y,y_hat){
   input_check_y_yhat(y,y_hat)
-  return(median(200*((abs(y-y_hat)/(y+y_hat)))))
+  return(stats::median(200*((abs(y-y_hat)/(y+y_hat)))))
 }
 
 ################### Scale dependant ########################
 
 #' MSE - Mean Squared Error
-#' \textbf{MSE} : $ \frac{1}{n} \sum_{t=0}^n (y_t - \hat{y}_t)^2$
+#' 
+#' MSE = \eqn{1/n \sum_{t=0}^n (y_t - y_hat_t)^2}
+#' 
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.  
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
+#'
+#' @export
 #'
 #' @return According to the value of \code{result_type}:
 #'         \itemize{
@@ -225,12 +245,21 @@ MSE <- function(y,y_hat,result_type=c("measure","raw")){
 }
 
 #' RMSE - Root Mean Squared Error
-#' \textbf{RMSE} : $\sqrt{ \frac{1}{n} \sum_{t=0}^n (y_t - \hat{y}_t)^2}$
+#' 
+#' RMSE = \eqn{\sqrt{ 1/n \sum_{t=0}^n (y_t - y_hat_t)^2}}
+#' 
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
 #'
-#' @return MSE value
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{RMSE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one RMSE for each time step}
+#'         }
 #' @examples
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
@@ -245,12 +274,22 @@ RMSE <- function(y,y_hat,result_type=c("measure","raw")){
 }
 
 #' MAE - Mean Absolute Error
-#' \textbf{MAE} : $\frac{1}{n} \sum_{t=0}^n |y_t - \hat{y}_t|$
+#' 
+#' MAE = \eqn{1/n \sum_{t=0}^n |y_t - y_hat_t|}
+#' 
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688. 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
 #'
-#' @return MAE value
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{MAE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one MAE for each time step}
+#'         }
+#'         
 #' @examples
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
@@ -277,10 +316,14 @@ MAE <- function(y,y_hat,result_type=c("measure","raw")){
 }
 
 #' MdAE - Median Absolute Error
-#' \textbf{MdAE} : median(|y_t - \hat{y}_t|)$
+#'
+#' MdAE = \eqn{median(|y_t - y_hat_t|)}
+#'
 #' @references Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International journal of forecasting, 22(4), 679-688.  
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#'
+#' @export
 #'
 #' @return MdAE value
 #' @examples
@@ -293,17 +336,21 @@ MAE <- function(y,y_hat,result_type=c("measure","raw")){
 #' result <- MdAE(y_test,y_hat_naive)
 MdAE <- function(y,y_hat){
   input_check_y_yhat(y,y_hat)
-  return(median(abs(y-y_hat)))
+  return(stats::median(abs(y-y_hat)))
 }
 
 
 ################### Relative Errors ########################
 
 #' RE - Relative Error
-#' \textbf{RE} : $\frac{\mathbf{y}-\hat{\mathbf{y}}}{\mathbf{y}-\hat{\mathbf{y}_b}}$
+#' 
+#' RE = \eqn{(Y-Y_hat)/(Y-Y_hat_bench)}
+#' 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
+#'
+#' @export
 #'
 #' @return RE value
 #' @examples 
@@ -311,7 +358,7 @@ MdAE <- function(y,y_hat){
 #' splitting_point <- round(2*length(y)/3)
 #' y_train <- y[1:splitting_point]
 #' h <- 5
-
+#'
 #' y_test <- y[(splitting_point+1):(splitting_point+h)]
 #' y_hat_naive <- rep(tail(y_train,1),h)
 #' y_hat_average <-  rep(mean(y_train),h)
@@ -322,18 +369,28 @@ RE <- function(y,y_hat,y_hat_bench){
 }
 
 #' MRAE - Mean Relative Absolute Error
-#' \textbf{MRAE} : $\frac{1}{n} \sum_{t=0}^n  \mid r_t \mid$
+#' 
+#' MRAE = $\eqn{1/n \sum_{t=0}^n  r_t}
+#'
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
 #'
-#' @return MRAE value
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{MRAE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one MRAE for each time step}
+#'         }
+#'         
 #' @examples 
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
 #' y_train <- y[1:splitting_point]
 #' h <- 5
-
+#'
 #' y_test <- y[(splitting_point+1):(splitting_point+h)]
 #' y_hat_naive <- rep(tail(y_train,1),h)
 #' y_hat_average <-  rep(mean(y_train),h)
@@ -357,10 +414,14 @@ MRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
 
 
 #' MdRAE - Median Relative Absolute Error
-#' \textbf{MdRAE} : median(\mid r_t \mid)$
+#'
+#' MdRAE = \eqn{median(r_t)}
+#'
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #' @param y_hat_bench - Forecasted values of the time series using the benchmark model
+#'
+#' @export
 #'
 #' @return MdRAE value
 #' @examples 
@@ -375,23 +436,33 @@ MRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
 #' results <- MdRAE(y_test,y_hat_average,y_hat_naive)
 MdRAE <- function(y,y_hat,y_hat_bench){
   input_check_y_yhat_ybench(y,y_hat,y_hat_bench)
-  return(median(abs(RE(y,y_hat,y_hat_bench))))
+  return(stats::median(abs(RE(y,y_hat,y_hat_bench))))
 }
 
 
 #' GMRAE - Geometric Mean Relative Absolute Error
-#' \textbf{GMRAE} : $\sqrt[n]{\frac{1}{n} \prod{t=0}^n  \mid r_t \mid}$
-#' @param y - True values of the time series
-#' @param y_hat - Forecasted values of the time series
-#' @param y_hat_bench - Forecasted values of the time series using the benchmark model
+#' 
+#' GMRAE = \eqn{(1/n \prod{t=0}^n  r_t )^(1/n)}
 #'
-#' @return RE value
+#' @param y - True values of the time series
+#' @param y_hat - Forecast values of the time series
+#' @param y_hat_bench - Forecast values of the time series using the benchmark model
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
+#'
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{GMRAE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one GMRAE for each time step}
+#'         }
+#'         
 #' @examples 
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
 #' y_train <- y[1:splitting_point]
 #' h <- 5
-
+#'
 #' y_test <- y[(splitting_point+1):(splitting_point+h)]
 #' y_hat_naive <- rep(tail(y_train,1),h)
 #' y_hat_average <-  rep(mean(y_train),h)
@@ -416,17 +487,27 @@ GMRAE <- function(y,y_hat,y_hat_bench,result_type=c("measure","raw")){
 ################### Normalized Errors ########################
 
 #' MASE - Mean Absolute Scaled Error
-#' \textbf{MASE} : $\frac{1}{T}\sum_{t=1}^T \left( \frac{\left| e_t \right|}{\frac{1}{T-1}\sum_{i=2}^T \left| Y_i-Y_{i-1} \right|}\right)$
+#' 
+#' MASE = \eqn{1/T \sum_{t=1}^T ( ( e_t )/((T/(T-1)) \sum_{i=2}^T  Y_i-Y_{i-1}))}
+#'
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
 #'
-#' @return MASE value
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{MASE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one MASE for each time step}
+#'         }
+#'         
 #' @examples 
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
 #' y_train <- y[1:splitting_point]
 #' h <- 5
-
+#'
 #' y_test <- y[(splitting_point+1):(splitting_point+h)]
 #' y_hat_naive <- rep(tail(y_train,1),h)
 #' results <- MASE(y_test,y_hat_naive)
@@ -440,7 +521,7 @@ MASE <- function(y,y_hat,result_type=c("measure","raw")){
   }
   
   if( length(y) == 1 || length(y_hat) == 1 ){
-    stop("NMSE undefined for horizon 1")
+    stop("MASE undefined for horizon 1")
   }
   
   result_type <- match.arg(result_type)
@@ -454,18 +535,28 @@ MASE <- function(y,y_hat,result_type=c("measure","raw")){
 
 
 #' NMSE - Normalized Mean Squared Error
-#' \textbf{NMSE:} $\frac{1}{n}\frac{\sum_{t=0}^{n} (y_t-\hat{y}_t)^2}{var(y_t)} $
+#' 
+#' NMSE = \eqn{1/n (\sum_{t=0}^{n} (y_t-y_hat_t)^2)/(var(y_t))}
+#' 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #' @param normalizing_variance - Variance of the training set
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
 #'
-#' @return NMSE value
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{NMSE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one NMSE for each time step}
+#'         }
+#'         
 #' @examples 
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
 #' y_train <- y[1:splitting_point]
 #' h <- 5
-
+#'
 #' y_test <- y[(splitting_point+1):(splitting_point+h)]
 #' y_hat_naive <- rep(tail(y_train,1),h)
 #' results <- NMSE(y_test,y_hat_naive)
@@ -482,7 +573,7 @@ NMSE <- function(y,y_hat,normalizing_variance=NULL,result_type=c("measure","raw"
   }
   
   if(is.null(normalizing_variance)){
-    normalizing_variance <- var(y)
+    normalizing_variance <- stats::var(y)
   }
   
   result_type <- match.arg(result_type)
@@ -490,18 +581,28 @@ NMSE <- function(y,y_hat,normalizing_variance=NULL,result_type=c("measure","raw"
 }
 
 #' NNMSE - Normalized Naive Mean Squared Error
-#' \textbf{NMSE:} $\frac{1}{n}\frac{\sum_{t=0}^{n} (y_t-\hat{y}_t)^2}{\sum_{t=0}^{n} (y_t-\hat{y}_{Naive,t})^2} $
+#' 
+#' NMSE = \eqn{1/n (\sum_{t=0}^{n} (y_t-y_hat_t)^2)/(\sum_{t=0}^{n} (y_t-y_hat_{Naive,t})^2)}
+#' 
 #' @param y - True values of the time series
 #' @param y_hat - Forecasted values of the time series
 #' @param y_hat_naive - Forecasted values of the time series with the naive method
+#' @param result_type - String indicating whether the function should return the raw values ("raw"), or the computed measure ("measure")
 #'
-#' @return NNMSE value
+#' @export
+#'
+#' @return According to the value of \code{result_type}:
+#'         \itemize{
+#'         \item{\code{measure} -> }{NNMSE computed according to the formula}
+#'         \item{\code{raw} -> }{Vector containing one NNMSE for each time step}
+#'         }
+#'         
 #' @examples 
 #' y <- AirPassengers
 #' splitting_point <- round(2*length(y)/3)
 #' y_train <- y[1:splitting_point]
 #' h <- 5
-
+#' 
 #' y_test <- y[(splitting_point+1):(splitting_point+h)]
 #' y_hat_naive <- rep(tail(y_train,1),h)
 #' y_hat_average <-  rep(mean(y_train),h)

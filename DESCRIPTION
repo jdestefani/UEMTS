@@ -22,4 +22,5 @@ Imports:
 Requires:
     forecast
 Suggests: 
-    testthat
+    testthat,
+    fpp
